@@ -1,21 +1,4 @@
 /**
- * ASSET CONFIGURATION
- * Change ASSET_BASE_URL to your Vercel Blob URL (e.g., 'https://public.blob.vercel-storage.com/')
- * or keep it as 'layers/' for local testing.
- */
-
-/**
- * Path Resolver: Prepends the base URL if it's a relative 'layers/' path.
- */
-function resolvePath(path) {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-    const cleanPath = path.replace(/^layers\//, '');
-    const separator = ASSET_BASE_URL.endsWith('/') ? '' : '/';
-    return `${ASSET_BASE_URL}${separator}${cleanPath}`;
-}
-
-/**
  * PolychordEngine (Standalone Port)
  */
 const PolychordEngine = {
@@ -86,7 +69,7 @@ const MusicController = {
     audio: null, isPlaying: false,
 
     init: function() {
-        this.audio = new Audio(resolvePath('layers/cicada.mp3'));
+        this.audio = new Audio('layers/cicada.mp3');
         this.audio.loop = true;
         this.audio.volume = 0.15;
         const btn = document.getElementById('toggle-music');
@@ -137,19 +120,8 @@ const DeskPreview = {
     noiseW: 320, noiseH: 240,
 
     init: function () {
-        this.autoPatchHTML();
         this.setupProps(); this.setupListeners(); this.initPSX(); this.startLoop();
         MusicController.init();
-    },
-
-    autoPatchHTML: function() {
-        // Automatically fixes any index.html <img> or <video> tags with local paths.
-        document.querySelectorAll('img, video, audio').forEach(el => {
-            const src = el.getAttribute('src');
-            if (src && src.startsWith('layers/')) {
-                el.setAttribute('src', resolvePath(src));
-            }
-        });
     },
 
     initPSX: function() {
@@ -219,14 +191,14 @@ const DeskPreview = {
             }
             if (p.id === 'foldedp') {
                 this.foldedpClicks++; PolychordEngine.play('strum', 0.6);
-                if (this.foldedpClicks >= 4) { const img = el.querySelector('img'); if (img) img.src = resolvePath('layers/comingsoon.png'); PolychordEngine.play('chime', 1.6); }
+                if (this.foldedpClicks >= 4) { const img = el.querySelector('img'); if (img) img.src = 'layers/comingsoon.png'; PolychordEngine.play('chime', 1.6); }
             }
         });
 
         if (p.id === 'foldedp') {
             el.addEventListener('dblclick', () => {
                 this.foldedpClicks = 0;
-                const img = el.querySelector('img'); if (img) img.src = resolvePath('layers/foldedpape.png');
+                const img = el.querySelector('img'); if (img) img.src = 'layers/foldedpape.png';
                 PolychordEngine.play('strum', 0.8);
             });
         }
@@ -250,27 +222,28 @@ const DeskPreview = {
 
     spawnUwucorn: function(atX, atY) {
         const el = document.createElement('div'); el.className = 'prop uwucorn-prop';
-        el.innerHTML = `<video src="${resolvePath('layers/uwucorn.webm')}" autoplay loop muted playsinline></video>`;
+        el.innerHTML = `<video src="layers/uwucorn.webm" autoplay loop muted playsinline></video>`;
         document.getElementById('scene').appendChild(el);
         const p = this.addProp(el, { x: atX, y: atY, scale: 0.85, depth: 0.45, zIndex: ++this.topZIndex });
         p.vx = 20; p.vy = -20; PolychordEngine.resume();
     },
 
     spawnFish: function() {
-        const fEl = document.createElement('img'); fEl.src = resolvePath('layers/BASSFISH.png'); fEl.className = 'bass-fish'; document.body.appendChild(fEl);
+        const fEl = document.createElement('img'); fEl.src = 'layers/BASSFISH.png'; fEl.className = 'bass-fish'; document.body.appendChild(fEl);
         const side = Math.random() > 0.5 ? 'left' : 'right', startX = (side === 'left') ? -600 : window.innerWidth + 600;
         const fish = {
             el: fEl, x: startX, y: Math.random() * (window.innerHeight - 300) + 150,
             vx: (side === 'left') ? (25 + Math.random() * 15) : -(25 + Math.random() * 15),
             t: 0, yFreq: 0.1 + Math.random() * 0.1, yAmp: 80 + Math.random() * 140
         };
+        fEl.style.transform = (fish.vx > 0) ? 'scaleX(-1)' : 'scaleX(1)';
         this.fishPool.push(fish);
     },
 
     spawnRemilia: function() {
         if (this.remiliaSpawned) return; this.remiliaSpawned = true;
         const el = document.createElement('div'); el.id = 'remilia'; el.className = 'prop remilia-prop';
-        el.innerHTML = `<img src="${resolvePath('layers/Remilia.png')}" draggable="false">`; 
+        el.innerHTML = `<img src="layers/Remilia.png" draggable="false">`; 
         document.getElementById('scene').appendChild(el);
         const p = this.addProp(el, { x: 1920/2 - 50, y: -200, scale: 0.875, depth: 0.35, zIndex: 10000000 });
         p.targetY = 1080/2 - 50; p.vx = 0; p.vy = 0; p.waitingForHop = true; 

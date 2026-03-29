@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desk Preview - Standalone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="psx-canvas"></canvas>
+    <div id="flashlight-overlay"></div>
+    
+    <div id="scene">
+        <!-- Dashboard / Scene Layers -->
+        <div class="layer background" data-depth="0.1">
+            <img src="layers/Background.png" alt="Desktop">
+        </div>
+
+        <!-- Interactive Objects -->
+        <div class="layer objects">
+            <div id="ashtray" class="prop static" style="z-index: 10;">
+                <img src="layers/Ashtray.png" alt="Ashtray" draggable="false">
+            </div>
+ 
+            <div id="cd-case" class="prop clickable" style="z-index: 1;">
+                <img id="cd-closed" src="layers/CDclosed.png" alt="CD Case" class="cd-image" draggable="false">
+                <img id="cd-open" src="layers/CDopen.png" alt="CD Case Open" class="cd-image hidden" draggable="false">
+            </div>
+ 
+            <!-- Draggable Objects -->
+            <div id="coin" class="prop draggable" style="z-index: 2;" data-depth="0.2">
+                <img src="layers/Coin Heads.png" alt="Coin" draggable="false">
+            </div>
+            <div id="floppy" class="prop draggable" style="z-index: 2;" data-depth="0.25">
+                <img src="layers/FloppyDiske.png" alt="Floppy" draggable="false">
+            </div>
+            <div id="pen" class="prop draggable" style="z-index: 2;" data-depth="0.15">
+                <img src="layers/Pen.png" alt="Pen" draggable="false">
+            </div>
+            <div id="bobber" class="prop draggable" style="z-index: 2;" data-depth="0.3">
+                <img src="layers/bobber.png" alt="Bobber" draggable="false">
+            </div>
+            <div id="keychain" class="prop draggable" style="z-index: 2;" data-depth="0.2">
+                <img src="layers/fishkeychain.png" alt="Keychain" draggable="false">
+            </div>
+            <div id="foldedp" class="prop draggable" style="z-index: 2;" data-depth="0.1">
+                <img src="layers/foldedpape.png" alt="Paper" draggable="false">
+            </div>
+            <div id="oldkey" class="prop draggable" style="z-index: 2;" data-depth="0.25">
+                <img src="layers/oldkey.png" alt="Old Key" draggable="false">
+            </div>
+            <div id="unicorn" class="prop draggable" style="z-index: 2;" data-depth="0.35">
+                <img src="layers/unicorn.png" alt="Unicorn" draggable="false">
+            </div>
+            <div id="usb" class="prop draggable" style="z-index: 2;" data-depth="0.2">
+                <img src="layers/usb.png" alt="USB" draggable="false">
+            </div>
+        </div>
+    </div>
+
+    <div id="music-controls">
+        <button id="toggle-music" class="music-btn">▶</button>
+    </div>
+
+    <!-- Polychord Engine Scripts will be here -->
+    <script src="script.js"></script>
+</body>
+</html>

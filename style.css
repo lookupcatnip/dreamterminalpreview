@@ -1,0 +1,175 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+    font-family: Arial, sans-serif;
+    user-select: none;
+}
+
+#scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.background img {
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    position: absolute;
+    top: -5%;
+    left: -5%;
+}
+
+.prop {
+    position: absolute;
+    cursor: grab;
+    transition: transform 0.1s ease-out, filter 0.3s ease;
+    pointer-events: auto;
+}
+
+.prop img {
+    max-width: 200px;
+    height: auto;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.7));
+    transition: filter 0.3s ease;
+}
+
+.prop.lifting {
+    cursor: grabbing;
+    transform: scale(1.1) rotate(2deg);
+}
+
+/* Floppy Glitch Styling */
+.prop.glitching img {
+    filter: drop-shadow(0 0 15px #ff00ff) drop-shadow(0 0 30px #00f0ff) brightness(1.5);
+    animation: jitter 0.1s infinite;
+}
+
+@keyframes jitter {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -2px); }
+    75% { transform: translate(-2px, -2px); }
+    100% { transform: translate(2px, 2px); }
+}
+
+#flashlight-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 60000000;
+    background: radial-gradient(
+        circle 1200px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        transparent 0%,
+        rgba(0, 0, 0, 0.4) 60%,
+        rgba(0, 0, 0, 0.95) 100%
+    );
+}
+
+#psx-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 55000000;
+    opacity: 0.65;
+    mix-blend-mode: overlay;
+    image-rendering: pixelated;
+    transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+#psx-canvas.glitch-active {
+    opacity: 0.95;
+    filter: contrast(1.5) brightness(1.2) hue-rotate(10deg);
+}
+
+#music-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 100000000;
+}
+
+.music-btn {
+    background: transparent;
+    border: none;
+    color: #4df1ff;
+    cursor: pointer;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.music-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+}
+
+/* Fish Animation Fix */
+.bass-fish {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999999;
+    max-height: 400px;
+    filter: drop-shadow(0 30px 50px rgba(0,0,0,0.6));
+}
+
+.fish-bubble {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    z-index: 99999999;
+}
+
+/* Golden Starburst System */
+.sparkle-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000000000; 
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #fff 0%, #ffd700 40%, #ff8c00 60%, transparent 80%);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    transform: translate(-50%, -50%) scale(0);
+}
+
+@keyframes radiate {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 1; filter: brightness(2); }
+    100% { 
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--s)) rotate(var(--r)); 
+        opacity: 0; 
+        filter: brightness(1); 
+    }
+}
+
+/* Prop-specific overrides */
+#cd-case img { max-width: 310px; }
+.uwucorn-prop video {
+    max-width: 200px;
+    height: auto;
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.8)); 
+    border-radius: 10px;
+}
+
+.hidden { display: none; }

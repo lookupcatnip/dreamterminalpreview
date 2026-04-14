@@ -173,3 +173,6 @@ body {
 }
 
 .hidden { display: none; }
+
+/* Booster Pack prop */
+#boosterpack img { max-width: 280px; }

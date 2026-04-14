@@ -106,7 +106,8 @@ const HARCODED_LAYOUT = [
   { id: "foldedp", x: 494, y: 39, rotate: 0, depth: 0.10, zIndex: 108, scale: 1.00 },
   { id: "oldkey", x: 1092, y: 751, rotate: 0, depth: 0.25, zIndex: 104, scale: 1.36 },
   { id: "unicorn", x: 37, y: 162, rotate: 0, depth: 0.35, zIndex: 106, scale: 0.70 },
-  { id: "usb", x: 1629, y: 403, rotate: 0, depth: 0.20, zIndex: 109, scale: 1.00 }
+  { id: "usb", x: 1629, y: 403, rotate: 0, depth: 0.20, zIndex: 109, scale: 1.00 },
+  { id: "boosterpack", x: -171, y: 400, rotate: 10, depth: 0.23, zIndex: 1000036, scale: 0.77, skewX: -11.5, skewY: 5.5 }
 ];
 
 const DeskPreview = {
@@ -150,6 +151,7 @@ const DeskPreview = {
             vx: 0, vy: 0, depth: config.depth !== undefined ? config.depth : 0.1, isDragging: false, 
             scale: config.scale !== undefined ? parseFloat(config.scale) : 1.0,
             rotation: config.rotate || 0, zIndex: config.zIndex !== undefined ? config.zIndex : 2,
+            editorSkewX: config.skewX || 0, editorSkewY: config.skewY || 0,
             springK: config.springK || 0.12, damping: config.damping || 0.82
         };
         this.props.push(p);
@@ -188,6 +190,11 @@ const DeskPreview = {
                     this.createFlash(sX + 85, sY + 85); this.spawnUwucorn(sX, sY); 
                     PolychordEngine.play('chime', 2.0);
                 }
+            }
+            if (p.id === 'boosterpack') {
+                this.boosterpackJitter(p);
+                this.createFlash(p.x + 140, p.y + 100);
+                PolychordEngine.play('chime', 1.2);
             }
             if (p.id === 'foldedp') {
                 this.foldedpClicks++; PolychordEngine.play('strum', 0.6);
@@ -248,6 +255,17 @@ const DeskPreview = {
         const p = this.addProp(el, { x: 1920/2 - 50, y: -200, scale: 0.875, depth: 0.35, zIndex: 10000000 });
         p.targetY = 1080/2 - 50; p.vx = 0; p.vy = 0; p.waitingForHop = true; 
         PolychordEngine.play('chime', 1.5);
+    },
+
+    boosterpackJitter: function(p) {
+        // Sharp micro-vibrate in place
+        let kicks = 0;
+        const jitterInterval = setInterval(() => {
+            p.vx += (Math.random() - 0.5) * 8;
+            p.vy += (Math.random() - 0.5) * 6;
+            kicks++;
+            if (kicks >= 8) clearInterval(jitterInterval);
+        }, 30);
     },
 
     spawnBubble: function(x, y) {
@@ -340,8 +358,9 @@ const DeskPreview = {
             if (p.id === 'cd-case') s *= this.isCdOpen ? 1.15 : 0.7;
             if (p.id === 'foldedp' && this.foldedpClicks >= 4) s *= 1.55;
             const px = -dx*p.depth*25*this.scaleFactor, py = -dy*p.depth*25*this.scaleFactor;
-            const skewX = p.vx*0.2, stretchX = 1+(Math.abs(p.vx)/150), stretchY = 1+(Math.abs(p.vy)/150);
-            p.el.style.transform = `translate(${px}px, ${py}px) scale(${s*stretchX}, ${s*stretchY}) rotate(${p.rotation}deg) skewX(${skewX}deg)`;
+            const skewX = (p.editorSkewX || 0) + p.vx*0.2, skewY = p.editorSkewY || 0;
+            const stretchX = 1+(Math.abs(p.vx)/150), stretchY = 1+(Math.abs(p.vy)/150);
+            p.el.style.transform = `translate(${px}px, ${py}px) scale(${s*stretchX}, ${s*stretchY}) rotate(${p.rotation}deg) skewX(${skewX}deg) skewY(${skewY}deg)`;
         });
     },
 
